@@ -1,5 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from 'react-modal'
+
+import {BsTrash} from 'react-icons/bs'
+import {BiEditAlt} from 'react-icons/bi'
+
 import './App.css'
 
 const customStyles = {
@@ -17,8 +21,10 @@ Modal.setAppElement(document.getElementById('root'));
 
 function App() {
   const [modalOpen, setModalOpen] = useState();
-  const [task, setTask] = useState("");
-
+  const [count, setCount] = useState(0);
+  const [id, setID] = useState(0);
+  const [task, setTask] = useState();
+  const [listaTask, setListaTask] = useState([])
 
   function openModal() {
     setModalOpen(true);
@@ -34,7 +40,24 @@ function App() {
 
     setTask(value)
   }
-console.log(task)
+
+  const handleSubmit = (e) =>{
+    e.preventDefault();
+    
+    const newTask = [...listaTask, {
+      taskDesc: task,
+      taskID: id,
+      },
+    ];
+
+    setListaTask(newTask)
+    setTask("")
+    setCount(count + 1)
+    setID(id + 1);
+  }
+
+  console.log(id)
+  console.log(listaTask)
   return (
     <div className="App">
       <div className="container-geral">
@@ -42,6 +65,19 @@ console.log(task)
         <div className="container-task">
           <div className="todo">
             <h2>To do</h2>
+            <div className="tasks-todo">
+              {listaTask.taskDesc != '' && listaTask.map((desafios) => {
+                return(<div className='miniContainer-task'>
+                  <p>{desafios.taskDesc}</p>
+                  <div className="icons-task">
+                    <BiEditAlt/>
+                    <BsTrash/>
+                  </div>
+
+                </div>
+                )
+              })}
+            </div>
             <button onClick={openModal}>Adicionar uma task</button>
             <div className='Modal'>
               <Modal
@@ -51,9 +87,12 @@ console.log(task)
                 contentLabel="Task To do"
               >
                 <h2>Escreva sua task abaixo</h2>
+                <form onSubmit={handleSubmit}>
                   <input type="text" placeholder='Escreva aqui sua tarefa!' value={task} onChange={handleTask}/>
                   <input type="submit" value="Salvar" />
                   <button onClick={closeModal}>Close</button>
+                </form>
+
 
               </Modal>
             </div>
