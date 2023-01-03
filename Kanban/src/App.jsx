@@ -21,7 +21,6 @@ Modal.setAppElement(document.getElementById('root'));
 
 function App() {
   const [modalOpen, setModalOpen] = useState();
-  const [count, setCount] = useState(0);
   const [id, setID] = useState(0);
   const [task, setTask] = useState();
   const [listaTask, setListaTask] = useState([])
@@ -32,6 +31,7 @@ function App() {
 
   function closeModal() {
     setModalOpen(false);
+
   }
 
   const handleTask = (e) => {
@@ -50,14 +50,23 @@ function App() {
       },
     ];
 
-    setListaTask(newTask)
-    setTask("")
-    setCount(count + 1)
+    setListaTask(newTask);
+    setTask("");
     setID(id + 1);
+    closeModal();
+
   }
 
-  console.log(id)
+  const deletar = (index) => {
+    console.log(`o id para deletar é: ${index}`);
+    const listaCopy = Array.from(listaTask);
+    listaCopy.splice(index, 1)
+    setListaTask(listaCopy)
+  }
+
+
   console.log(listaTask)
+  console.log("Quantidade de IDs ja criados é de :", id)
   return (
     <div className="App">
       <div className="container-geral">
@@ -66,19 +75,19 @@ function App() {
           <div className="todo">
             <h2>To do</h2>
             <div className="tasks-todo">
-              {listaTask.taskDesc != '' && listaTask.map((desafios) => {
+              {listaTask.taskDesc != "" && listaTask.map((desafios,index) => {
                 return(<div className='miniContainer-task'>
                   <p>{desafios.taskDesc}</p>
                   <div className="icons-task">
-                    <BiEditAlt/>
-                    <BsTrash/>
+                    <button ><BiEditAlt/></button>
+                    <button onClick={() => deletar(index)}><BsTrash/></button>
                   </div>
-
                 </div>
-                )
+                ) 
               })}
+
             </div>
-            <button onClick={openModal}>Adicionar uma task</button>
+            <button className='adicionar-task' onClick={openModal}>Adicionar uma task</button>
             <div className='Modal'>
               <Modal
                 isOpen={modalOpen}
