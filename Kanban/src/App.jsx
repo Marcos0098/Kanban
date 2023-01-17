@@ -1,10 +1,9 @@
-<<<<<<< HEAD
+
 import { useState } from 'react';
 import Modal from 'react-modal';
-=======
+
 import { useEffect, useState } from 'react'
 import Modal from 'react-modal'
->>>>>>> parent of dac6a63 (botão de edit)
 
 import {BsTrash} from 'react-icons/bs';
 import {BiEditAlt} from 'react-icons/bi';
@@ -29,37 +28,33 @@ function App() {
   const [modalOpen, setModalOpen] = useState();
   const [id, setID] = useState(0);
   const [task, setTask] = useState();
-<<<<<<< HEAD
+
   const [editedTask, setEditedTask] = useState();
   const [editedIndex, setEditedIndex] = useState();
   const [listaTodo, setListaTodo] = useState([])
   const [listaDoing, setListaDoing] = useState([{taskDesc:"asdasdas", taskID:20}])
   // open e close Modal para inserir uma task
-=======
+
   const [listaTask, setListaTask] = useState([])
 
->>>>>>> parent of dac6a63 (botão de edit)
+
   function openModal() {
     setModalOpen(true);
   }
 
   function closeModal() {
     setModalOpen(false);
-<<<<<<< HEAD
-  }
-=======
->>>>>>> parent of dac6a63 (botão de edit)
-
   }
 
-<<<<<<< HEAD
+  
+
+
   function closeModalEdit() {
     setModalEditOpen(false);
   }
 
   //Submit para adicionar a task na lista "TO DO"
-=======
->>>>>>> parent of dac6a63 (botão de edit)
+
   const handleTask = (e) => {
     e.preventDefault();
     const value = e.target.value;
@@ -83,7 +78,7 @@ function App() {
 
   }
 
-<<<<<<< HEAD
+
   //Submit para Editar a task
   const handleEditedTask = (e) => {
     e.preventDefault();
@@ -109,12 +104,12 @@ function App() {
   const deletar = (index) => {
     console.log(`o id para deletar é: ${index}`);
     const listaCopy = Array.from(listaTask);
->>>>>>> parent of dac6a63 (botão de edit)
+
     listaCopy.splice(index, 1)
     setListaTodo(listaCopy)
   }
 
-<<<<<<< HEAD
+
   //Alterar a lista de tasks ao arrastar e soltar
   function handleOnDragEnd(result) {
     if (!result.destination) return;
@@ -135,7 +130,7 @@ function App() {
 
   console.log(listaTask)
   console.log("Quantidade de IDs ja criados é de :", id)
->>>>>>> parent of dac6a63 (botão de edit)
+
   return (
     <div className="App">
       <div className="container-geral">
@@ -143,7 +138,7 @@ function App() {
         <div className="container-task">
           <div className="todo">
             <h2>To do</h2>
-<<<<<<< HEAD
+
             
               <Droppable droppableId="desafios-todo">
               {(provided) => (
@@ -168,7 +163,7 @@ function App() {
                 )}
               </Droppable>
             
-=======
+
             <div className="tasks-todo">
               {listaTask.taskDesc != "" && listaTask.map((desafios,index) => {
                 return(<div className='miniContainer-task'>
@@ -180,7 +175,7 @@ function App() {
                 </div>
                 ) 
               })}
->>>>>>> parent of dac6a63 (botão de edit)
+
 
             <button className='adicionar-task' onClick={openModal}>Adicionar uma task</button>
             <div className='Modal'>
@@ -208,7 +203,7 @@ function App() {
         <div className="container-task">
           <div className="doing">
             <h2>Doing</h2>
-<<<<<<< HEAD
+
               <Droppable droppableId="desafios-doing">
               {(provided) => (
                 <ul className='desafios-doing' {...provided.droppableProps} ref={provided.innerRef}>
@@ -231,8 +226,7 @@ function App() {
                 </ul>
                 )}
               </Droppable>
-=======
->>>>>>> parent of dac6a63 (botão de edit)
+
           </div>
         </div>
 
