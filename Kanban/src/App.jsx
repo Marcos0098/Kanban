@@ -2,9 +2,6 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 
-import { useEffect, useState } from 'react'
-import Modal from 'react-modal'
-
 import {BsTrash} from 'react-icons/bs';
 import {BiEditAlt} from 'react-icons/bi';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -28,15 +25,10 @@ function App() {
   const [modalOpen, setModalOpen] = useState();
   const [id, setID] = useState(0);
   const [task, setTask] = useState();
-
-  const [editedTask, setEditedTask] = useState();
-  const [editedIndex, setEditedIndex] = useState();
-  const [listaTodo, setListaTodo] = useState([])
-  const [listaDoing, setListaDoing] = useState([{taskDesc:"asdasdas", taskID:20}])
-  // open e close Modal para inserir uma task
-
+  const [modalEditOpen, setModalEditOpen] = useState();
   const [listaTask, setListaTask] = useState([])
 
+  // open e close Modal para inserir uma task
 
   function openModal() {
     setModalOpen(true);
@@ -45,9 +37,6 @@ function App() {
   function closeModal() {
     setModalOpen(false);
   }
-
-  
-
 
   function closeModalEdit() {
     setModalEditOpen(false);
@@ -65,13 +54,13 @@ function App() {
   const handleSubmit = (e) =>{
     e.preventDefault();
     
-    const newTask = [...listaTodo, {
+    const newTask = [...listaTask, {
       taskDesc: task,
       taskID: id,
       },
     ];
 
-    setListaTodo(newTask);
+    setListaTask(newTask);
     setTask("");
     setID(id + 1);
     closeModal();
@@ -99,9 +88,6 @@ function App() {
 
   //function para deletar Task
   const deletar = (index) => {
-    const listaCopy = Array.from(listaTodo);
-=======
-  const deletar = (index) => {
     console.log(`o id para deletar é: ${index}`);
     const listaCopy = Array.from(listaTask);
 
@@ -113,23 +99,20 @@ function App() {
   //Alterar a lista de tasks ao arrastar e soltar
   function handleOnDragEnd(result) {
     if (!result.destination) return;
-    const items = Array.from(listaTodo);
+    const items = Array.from(listaTask);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    setListaTodo(items);
+    setListaTask(items);
   }
 
 
   
   //Logs de teste
-  console.log(listaDoing)
-  //Logs de teste
-
-=======
-
   console.log(listaTask)
   console.log("Quantidade de IDs ja criados é de :", id)
+
+  //Logs de teste
 
   return (
     <div className="App">
@@ -143,7 +126,7 @@ function App() {
               <Droppable droppableId="desafios-todo">
               {(provided) => (
                   <ul className="desafios-todo" {...provided.droppableProps} ref={provided.innerRef}>
-                  {listaTodo.map((desafios,index) => {
+                  {listaTask.map((desafios,index) => {
                     return(
                       <Draggable key={desafios.taskDesc} draggableId={desafios.taskDesc} index={index}>
                         {(provided) => (
@@ -197,36 +180,15 @@ function App() {
             </div>
            
           </div>
-
+          </div>
         </div>
 
         <div className="container-task">
           <div className="doing">
             <h2>Doing</h2>
-
-              <Droppable droppableId="desafios-doing">
-              {(provided) => (
-                <ul className='desafios-doing' {...provided.droppableProps} ref={provided.innerRef}>
-                  {listaDoing.map((desafios, index) => {
-                    return(
-                      <Draggable key={desafios.taskDesc} draggableId={desafios.taskDesc} index={index}>
-                        {(provided) => (
-                          <li className='miniContainer-task' key={desafios.taskDesc}  ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <p>{desafios.taskDesc}</p>
-                            <div className="icons-task">
-                              <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
-                              <button onClick={() => deletar()}><BsTrash/></button>
-                            </div>
-                          </li>
-                        )}
-                      </Draggable>
-                    )
-                  })}
-                    {provided.placeholder}
+                <ul className='desafios-doing'>
+                 
                 </ul>
-                )}
-              </Droppable>
-
           </div>
         </div>
 
