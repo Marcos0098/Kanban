@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import {BsTrash} from 'react-icons/bs';
 import {BiEditAlt} from 'react-icons/bi';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 
 import './App.css'
 
@@ -26,10 +27,13 @@ function App() {
   const [id, setID] = useState(0);
   const [task, setTask] = useState();
   const [modalEditOpen, setModalEditOpen] = useState();
+  const [editedTask, setEditedTask] = useState();
+  const [editedIndex, setEditedIndex] = useState();
+
   const [listaTask, setListaTask] = useState([])
+  const [listaDoing, setListaDoing] = useState([])
 
   // open e close Modal para inserir uma task
-
   function openModal() {
     setModalOpen(true);
   }
@@ -38,12 +42,16 @@ function App() {
     setModalOpen(false);
   }
 
+  function openModalEdit(index) {
+    setModalEditOpen(true);
+    setEditedIndex(index)
+  }
+
   function closeModalEdit() {
     setModalEditOpen(false);
   }
 
   //Submit para adicionar a task na lista "TO DO"
-
   const handleTask = (e) => {
     e.preventDefault();
     const value = e.target.value;
@@ -56,7 +64,8 @@ function App() {
     
     const newTask = [...listaTask, {
       taskDesc: task,
-      taskID: id,
+      id: id,
+      column: 1
       },
     ];
 
@@ -64,9 +73,7 @@ function App() {
     setTask("");
     setID(id + 1);
     closeModal();
-
   }
-
 
   //Submit para Editar a task
   const handleEditedTask = (e) => {
@@ -77,11 +84,11 @@ function App() {
   }
   
   const handleEdit = () => {
-    const listaCopy = Array.from(listaTodo);
+    const listaCopy = Array.from(listaTask);
     listaCopy.splice(editedIndex, 1, {taskDesc: editedTask});
 
 
-    setListaTodo(listaCopy);
+    setListaTask(listaCopy);
     setEditedTask("");
     closeModalEdit();
   }
@@ -92,9 +99,8 @@ function App() {
     const listaCopy = Array.from(listaTask);
 
     listaCopy.splice(index, 1)
-    setListaTodo(listaCopy)
+    setListaTask(listaCopy)
   }
-
 
   //Alterar a lista de tasks ao arrastar e soltar
   function handleOnDragEnd(result) {
@@ -106,12 +112,25 @@ function App() {
     setListaTask(items);
   }
 
+  function plusColumn(index) {
+    const listaCopyTodo = Array.from(listaTask);
+    const listaCopyDoing = Array.from(listaDoing)
+    const objeto = listaTask[index]
 
-  
+    listaCopyTodo.splice(index, 1)
+    setListaTask(listaCopyTodo)
+    setListaDoing(listaCopyDoing)
+
+    console.log("valor de objeto é:",objeto)
+  }
+
+  function decreaseColumn(index){
+    
+  }
+
   //Logs de teste
-  console.log(listaTask)
-  console.log("Quantidade de IDs ja criados é de :", id)
-
+  console.log("Lista Todo",listaTask)
+  console.log("Lista doing:",listaDoing)
   //Logs de teste
 
   return (
@@ -121,8 +140,6 @@ function App() {
         <div className="container-task">
           <div className="todo">
             <h2>To do</h2>
-
-            
               <Droppable droppableId="desafios-todo">
               {(provided) => (
                   <ul className="desafios-todo" {...provided.droppableProps} ref={provided.innerRef}>
@@ -132,10 +149,16 @@ function App() {
                         {(provided) => (
                           <li className='miniContainer-task' key={desafios.taskDesc} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                             <p>{desafios.taskDesc}</p>
-                            <div className="icons-task">
-                              <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
-                              <button onClick={() => deletar()}><BsTrash/></button>
+
+                            <div className="icons">
+                              <button className='left-arrow'><AiOutlineArrowLeft/></button>
+                              <div className="edit-delete">
+                                <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
+                                <button onClick={() => deletar(index)}><BsTrash/></button>
+                              </div>
+                              <button className='right-arrow' onClick={() => plusColumn(index)}><AiOutlineArrowRight/></button>
                             </div>
+
                           </li>
                         )}
                       </Draggable>
@@ -145,22 +168,9 @@ function App() {
                   </ul>
                 )}
               </Droppable>
-            
-
-            <div className="tasks-todo">
-              {listaTask.taskDesc != "" && listaTask.map((desafios,index) => {
-                return(<div className='miniContainer-task'>
-                  <p>{desafios.taskDesc}</p>
-                  <div className="icons-task">
-                    <button ><BiEditAlt/></button>
-                    <button onClick={() => deletar(index)}><BsTrash/></button>
-                  </div>
-                </div>
-                ) 
-              })}
-
 
             <button className='adicionar-task' onClick={openModal}>Adicionar uma task</button>
+
             <div className='Modal'>
               <Modal
                 isOpen={modalOpen}
@@ -174,12 +184,22 @@ function App() {
                   <input type="submit" value="Salvar" />
                   <button onClick={closeModal}>Close</button>
                 </form>
-
-
               </Modal>
+
+              <Modal
+                isOpen={modalEditOpen}
+                onRequestClose={closeModalEdit}
+                style={customStyles}
+                contentLabel="Edit Tasks"
+                >
+                  <h2>Edite sua task</h2>
+                  <form onSubmit={handleEdit}>
+                    <input type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
+                    <input type="submit" value="Salvar" />
+                    <button onClick={closeModalEdit}>Close</button>
+                </form>
+                </Modal>
             </div>
-           
-          </div>
           </div>
         </div>
 
@@ -193,10 +213,22 @@ function App() {
         </div>
 
         <div className="container-task">
-          <div className="done">
+          <ul className="done">
             <h2>Done</h2>
-          </div>
-
+            {listaDoing > 0 && listaDoing.map((desafios, index) => {
+              return(
+                <li className='miniContainer-task'>
+                  <p>{desafios.taskDesc}</p>
+                  <div className="icons-task">
+                    <button><AiOutlineArrowLeft/></button>
+                    <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
+                    <button onClick={() => deletar(index)}><BsTrash/></button>
+                    <button ><AiOutlineArrowRight/></button>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
         </div>
         </DragDropContext> 
       </div>
