@@ -31,7 +31,6 @@ function App() {
   const [editedIndex, setEditedIndex] = useState();
 
   const [listaTask, setListaTask] = useState([])
-  const [listaDoing, setListaDoing] = useState([])
 
   // open e close Modal para inserir uma task
   function openModal() {
@@ -114,29 +113,36 @@ function App() {
 
   function plusColumn(index) {
     const listaCopyTodo = Array.from(listaTask);
-    const objeto = listaTask[index]
+    listaCopyTodo[index].column += 1; 
+    
+    if(listaCopyTodo[index].column > 3){
+      listaCopyTodo[index].column = 3;
+    }
 
-    const listaCopyDoing = [...listaDoing, {
-      taskDesc: objeto.taskDesc,
-      id: objeto.id,
-      column: objeto.column + 1
-      },
-    ]
+    if(listaCopyTodo[index].column < 1){
+      listaCopyTodo[index].column = 1;
+    }
 
-    listaCopyTodo.splice(index, 1)
     setListaTask(listaCopyTodo)
-    setListaDoing(listaCopyDoing)
-
-    console.log("valor de objeto é:",objeto)
   }
 
   function decreaseColumn(index){
+    const listaCopyTodo = Array.from(listaTask);
+    listaCopyTodo[index].column -= 1; 
     
+    if(listaCopyTodo[index].column > 3){
+      listaCopyTodo[index].column = 3;
+    }
+
+    if(listaCopyTodo[index].column < 1){
+      listaCopyTodo[index].column = 1;
+    }
+
+    setListaTask(listaCopyTodo)
   }
 
   //Logs de teste
   console.log("Lista Todo",listaTask)
-  console.log("Lista doing:",listaDoing)
   //Logs de teste
 
   return (
@@ -151,13 +157,12 @@ function App() {
                   <ul className="desafios-todo" {...provided.droppableProps} ref={provided.innerRef}>
                   {listaTask.map((desafios,index) => {
                     return(
+                      desafios.column === 1 && 
                       <Draggable key={desafios.taskDesc} draggableId={desafios.taskDesc} index={index}>
                         {(provided) => (
                           <li className='miniContainer-task' key={desafios.taskDesc} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                             <p>{desafios.taskDesc}</p>
-
                             <div className="icons">
-                              <button className='left-arrow'><AiOutlineArrowLeft/></button>
                               <div className="edit-delete">
                                 <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
                                 <button onClick={() => deletar(index)}><BsTrash/></button>
@@ -168,7 +173,7 @@ function App() {
                           </li>
                         )}
                       </Draggable>
-                    ) 
+                    )
                   })}
                     {provided.placeholder}
                   </ul>
@@ -207,62 +212,105 @@ function App() {
                 </Modal>
             </div>
           </div>
-
         </div>
 
         <div className="container-task">
           <div className="doing">
             <h2>Doing</h2>
                 <ul className='desafios-doing'>
-                  <Droppable droppableId="desafios-Doing">
-                  {(provided) => (
-                    <ul className="desafios-todo" {...provided.droppableProps} ref={provided.innerRef}>
-                    {listaDoing.map((desafios,index) => {
-                      return(
-                        <Draggable key={desafios.taskDesc} draggableId={desafios.taskDesc} index={index}>
-                          {(provided) => (
-                            <li className='miniContainer-task' key={desafios.taskDesc} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                              <p>{desafios.taskDesc}</p>
-
-                              <div className="icons">
-                                <button className='left-arrow'><AiOutlineArrowLeft/></button>
-                                <div className="edit-delete">
-                                  <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
-                                  <button onClick={() => deletar(index)}><BsTrash/></button>
-                                </div>
-                                <button className='right-arrow' onClick={() => plusColumn(index)}><AiOutlineArrowRight/></button>
+                <Droppable droppableId="desafios-Doing">
+              {(provided) => (
+                  <ul className="desafios-Doing" {...provided.droppableProps} ref={provided.innerRef}>
+                  {listaTask.map((desafios,index) => {
+                    return(
+                      desafios.column === 2 && 
+                      <Draggable key={desafios.taskDesc} draggableId={desafios.taskDesc} index={index}>
+                        {(provided) => (
+                          <li className='miniContainer-task' key={desafios.taskDesc} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <p>{desafios.taskDesc}</p>
+                            <div className="icons">
+                            <button className='right-arrow' onClick={() => decreaseColumn(index)}><AiOutlineArrowLeft/></button>
+                              <div className="edit-delete">
+                                <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
+                                <button onClick={() => deletar(index)}><BsTrash/></button>
                               </div>
+                              <button className='right-arrow' onClick={() => plusColumn(index)}><AiOutlineArrowRight/></button>
+                            </div>
 
-                            </li>
-                          )}
-                        </Draggable>
-                      ) 
-                    })}
-                      {provided.placeholder}
-                    </ul>
-                  )}
+                          </li>
+                        )}
+                      </Draggable>
+                    )
+                  })}
+                    {provided.placeholder}
+                  </ul>
+                )}
               </Droppable>
                 </ul>
+                <div className="Modal">
+                  <Modal
+                  isOpen={modalEditOpen}
+                  onRequestClose={closeModalEdit}
+                  style={customStyles}
+                  contentLabel="Edit Tasks"
+                  >
+                    <h2>Edite sua task</h2>
+                    <form onSubmit={handleEdit}>
+                      <input type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
+                      <input type="submit" value="Salvar" />
+                      <button onClick={closeModalEdit}>Close</button>
+                  </form>
+                  </Modal>
+                </div>
           </div>
         </div>
 
         <div className="container-task">
           <ul className="done">
             <h2>Done</h2>
-            {listaDoing > 0 && listaDoing.map((desafios, index) => {
-              return(
-                <li className='miniContainer-task'>
-                  <p>{desafios.taskDesc}</p>
-                  <div className="icons-task">
-                    <button><AiOutlineArrowLeft/></button>
-                    <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
-                    <button onClick={() => deletar(index)}><BsTrash/></button>
-                    <button ><AiOutlineArrowRight/></button>
-                  </div>
-                </li>
-              )
-            })}
+            <Droppable droppableId="desafios-Done">
+              {(provided) => (
+                  <ul className="desafios-Done" {...provided.droppableProps} ref={provided.innerRef}>
+                  {listaTask.map((desafios,index) => {
+                    return(
+                      desafios.column === 3 && 
+                      <Draggable key={desafios.taskDesc} draggableId={desafios.taskDesc} index={index}>
+                        {(provided) => (
+                          <li className='miniContainer-task' key={desafios.taskDesc} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <p>{desafios.taskDesc}</p>
+                            <div className="icons">
+                            <button className='right-arrow' onClick={() => decreaseColumn(index)}><AiOutlineArrowLeft/></button>
+                              <div className="edit-delete">
+                                <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
+                                <button onClick={() => deletar(index)}><BsTrash/></button>
+                              </div>
+                            </div>
+
+                          </li>
+                        )}
+                      </Draggable>
+                    )
+                  })}
+                    {provided.placeholder}
+                  </ul>
+                )}
+              </Droppable>
           </ul>
+            <div className="Modal">
+              <Modal
+              isOpen={modalEditOpen}
+              onRequestClose={closeModalEdit}
+              style={customStyles}
+              contentLabel="Edit Tasks"
+              >
+              <h2>Edite sua task</h2>
+                <form onSubmit={handleEdit}>
+                  <input type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
+                  <input type="submit" value="Salvar" />
+                  <button onClick={closeModalEdit}>Close</button>
+                </form>
+              </Modal>
+            </div>
         </div>
         </DragDropContext> 
       </div>
