@@ -114,8 +114,14 @@ function App() {
 
   function plusColumn(index) {
     const listaCopyTodo = Array.from(listaTask);
-    const listaCopyDoing = Array.from(listaDoing)
     const objeto = listaTask[index]
+
+    const listaCopyDoing = [...listaDoing, {
+      taskDesc: objeto.taskDesc,
+      id: objeto.id,
+      column: objeto.column + 1
+      },
+    ]
 
     listaCopyTodo.splice(index, 1)
     setListaTask(listaCopyTodo)
@@ -201,13 +207,41 @@ function App() {
                 </Modal>
             </div>
           </div>
+
         </div>
 
         <div className="container-task">
           <div className="doing">
             <h2>Doing</h2>
                 <ul className='desafios-doing'>
-                 
+                  <Droppable droppableId="desafios-Doing">
+                  {(provided) => (
+                    <ul className="desafios-todo" {...provided.droppableProps} ref={provided.innerRef}>
+                    {listaDoing.map((desafios,index) => {
+                      return(
+                        <Draggable key={desafios.taskDesc} draggableId={desafios.taskDesc} index={index}>
+                          {(provided) => (
+                            <li className='miniContainer-task' key={desafios.taskDesc} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                              <p>{desafios.taskDesc}</p>
+
+                              <div className="icons">
+                                <button className='left-arrow'><AiOutlineArrowLeft/></button>
+                                <div className="edit-delete">
+                                  <button onClick={() => openModalEdit(index)}><BiEditAlt/></button>
+                                  <button onClick={() => deletar(index)}><BsTrash/></button>
+                                </div>
+                                <button className='right-arrow' onClick={() => plusColumn(index)}><AiOutlineArrowRight/></button>
+                              </div>
+
+                            </li>
+                          )}
+                        </Draggable>
+                      ) 
+                    })}
+                      {provided.placeholder}
+                    </ul>
+                  )}
+              </Droppable>
                 </ul>
           </div>
         </div>
