@@ -83,7 +83,6 @@
 }
 
 .todo h2{
-  color: #fff;
   font-size: 30px;
 }
 
@@ -129,3 +128,70 @@
   position:relative;
 	top:1px;
 }
+
+@media screen and (max-width: 1228px){
+
+  .container-geral{
+    display: flex ;
+    flex-direction: column ;
+    gap: 50px;
+    align-items: center;
+  }
+
+  .container-task{
+    width: 30%;
+  }
+
+  .miniContainer-task{
+    padding: 15px 7px;
+  }
+
+  .icons{
+    width: 20%;
+    margin-left: 10%;
+    transform: rotate(90deg);
+    justify-content: center;
+  }
+  
+  .edit-delete button{
+    transform: rotate(-90deg);
+  }
+
+  .miniContainer-task p {
+    font-size: 22px;
+  }
+}
+
+@media screen and (max-width: 768px){
+
+  .container-geral{
+    display: flex ;
+    flex-direction: column ;
+    gap: 50px;
+    align-items: center;
+  }
+
+  .container-task{
+    width: 80%;
+  }
+
+  .miniContainer-task{
+    padding: 15px 7px;
+  }
+
+  .icons{
+    width: 20%;
+    margin-left: 10%;
+    transform: rotate(90deg);
+    justify-content: center;
+  }
+  
+  .edit-delete button{
+    transform: rotate(-90deg);
+  }
+
+  .miniContainer-task p {
+    font-size: 22px;
+  }
+}
+  

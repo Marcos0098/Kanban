@@ -17,8 +17,37 @@ const customStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
+    color:'#7C9FF7',
+    backgroundColor: '#D9E1EA',
+    padding: '2%',
+    borderRadius: '10px',
+    border:'1px solid #181F31',
+    textAlign: 'center'
   },
 };
+
+const textInput = {
+    padding: '3px',
+    borderRadius: '5px',
+    marginTop: '20px'
+}
+
+const buttons = {
+    boxShadow: '3px 4px 0px 0px #899599',
+    background: 'linear-gradient(to bottom, #ffffff 5%, #bab1ba 100%)',
+    backgroundColor: '#ffffff',
+    borderRadius: '10px',
+    border: '1px solid #d6bcd6',
+    display: 'inline-block',
+    cursor: 'pointer',
+    color: '#1c5361',
+    fontFamily: 'Arial',
+    fontSize: '12px',
+    padding: '3px 15px',
+    textDecoration: 'none',
+    textShadow: '0px 1px 0px #e1e2ed',
+    marginLeft: '10px'
+}
 
 Modal.setAppElement(document.getElementById('root'));
 
@@ -83,10 +112,13 @@ function App() {
   }
   
   const handleEdit = () => {
+    console.log(editedIndex)
     const listaCopy = Array.from(listaTask);
-    listaCopy.splice(editedIndex, 1, {taskDesc: editedTask});
+    const taskEdita = listaCopy[editedIndex];
+    listaCopy.splice(editedIndex, 1, {taskDesc: editedTask, id: taskEdita.id, column: taskEdita.column});
 
-
+    console.log(editedIndex)
+    console.log(taskEdita)
     setListaTask(listaCopy);
     setEditedTask("");
     closeModalEdit();
@@ -191,9 +223,9 @@ function App() {
               >
                 <h2>Escreva sua task abaixo</h2>
                 <form onSubmit={handleSubmit}>
-                  <input type="text" placeholder='Escreva aqui sua tarefa!' value={task} onChange={handleTask}/>
-                  <input type="submit" value="Salvar" />
-                  <button onClick={closeModal}>Close</button>
+                  <input style={textInput} type="text" placeholder='Escreva aqui sua tarefa!' value={task} onChange={handleTask}/>
+                  <input style={buttons} type="submit" value="Salvar" />
+                  <button style={buttons} onClick={closeModal}>Close</button>
                 </form>
               </Modal>
 
@@ -204,10 +236,10 @@ function App() {
                 contentLabel="Edit Tasks"
                 >
                   <h2>Edite sua task</h2>
-                  <form onSubmit={handleEdit}>
-                    <input type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
-                    <input type="submit" value="Salvar" />
-                    <button onClick={closeModalEdit}>Close</button>
+                  <form   onSubmit={handleEdit}>
+                    <input style={textInput} type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
+                    <input style={buttons} type="submit" value="Salvar" />
+                    <button style={buttons} onClick={closeModalEdit}>Close</button>
                 </form>
                 </Modal>
             </div>
@@ -256,9 +288,9 @@ function App() {
                   >
                     <h2>Edite sua task</h2>
                     <form onSubmit={handleEdit}>
-                      <input type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
-                      <input type="submit" value="Salvar" />
-                      <button onClick={closeModalEdit}>Close</button>
+                      <input style={textInput} type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
+                      <input style={buttons} type="submit" value="Salvar" />
+                      <button style={buttons} onClick={closeModalEdit}>Close</button>
                   </form>
                   </Modal>
                 </div>
@@ -305,9 +337,9 @@ function App() {
               >
               <h2>Edite sua task</h2>
                 <form onSubmit={handleEdit}>
-                  <input type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
-                  <input type="submit" value="Salvar" />
-                  <button onClick={closeModalEdit}>Close</button>
+                  <input style={textInput} type="text" placeholder='Escreva aqui sua tarefa!' value={editedTask} onChange={handleEditedTask}/>
+                  <input style={buttons} type="submit" value="Salvar" />
+                  <button style={buttons} onClick={closeModalEdit}>Close</button>
                 </form>
               </Modal>
             </div>
